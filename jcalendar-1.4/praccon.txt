@@ -1,0 +1,38 @@
+       DefaultTableModel model = (DefaultTableModel) tb.getModel();
+        int rows = model.getRowCount();
+        if (rows>0){
+            for (int i = 0; i<rows; i++)
+                model.removeRow(0);
+        }
+        clear.doClick();
+        try {
+            Class.forName("java.sql.Driver");
+            System.out.print(1);
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/abhay","root","abhay");
+            System.out.print(2);
+            Statement stmt = con.createStatement();
+            System.out.print(3);
+            String sfld = (String) cmb1.getSelectedItem();
+            String op = (String) cmb2.getSelectedItem();
+            String crit = (String) txt.getText();
+            String query = "select empno, ename, job, hiredate, sal, dep from data where " + sfld + "" + op + "" + crit + ";";
+            System.out.print(4);
+            ResultSet rs = stmt.executeQuery(query);
+            System.out.print(5);
+            while(rs.next()){
+                model.addRow(new Object []{
+                rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDate(4), rs.getInt(5), rs.getInt(6)
+            
+                });
+                
+            }
+            rs.close();
+            stmt.close();
+            con.close();
+        
+        }
+        
+        catch (Exception e){
+        System.out.print(e);
+            JOptionPane.showMessageDialog(null, "error in connectivity");
+        }
